@@ -83,7 +83,7 @@ include 'dbconnection.php';
             $confirmPassword = mysqli_real_escape_string($conn, $_POST['confirmPassword']); 
 
             $sql = "INSERT INTO masteruser (FullName, Address, ContactNumber, EmailAddress, UserName, Password, UserType, IsActive)
-                    VALUES ('$fullname', '$address','$contactNumber','$emailAddress','$username','$password', 'Customer', 'true');";
+                    VALUES ('$fullname', '$address','$contactNumber','$emailAddress','$username','$password', 'customer', 'true');";
 
             if ($conn->query($sql) === TRUE) {
               $success = "Successfully Registered!";
