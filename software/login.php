@@ -59,7 +59,16 @@ session_start();
             $myusername = mysqli_real_escape_string($conn, $_POST['username']);
             $mypassword = mysqli_real_escape_string($conn, $_POST['password']); 
 
-            $sql = "SELECT Id, UserName, FullName, UserType FROM masteruser WHERE Username = '$myusername' and Password = '$mypassword'";
+            $sql = "SELECT Id, 
+                      UserName, 
+                      FullName, 
+                      Address, 
+                      ContactNumber, 
+                      EmailAddress, 
+                      UserType 
+                    FROM masteruser 
+                    WHERE Username = '$myusername' and Password = '$mypassword'";
+                    
             $result = mysqli_query($conn, $sql);
 
             $count = mysqli_num_rows($result);
@@ -69,6 +78,9 @@ session_start();
               $_SESSION['isLoggedin'] = true;
               $_SESSION['current_userId'] = $data["Id"];
               $_SESSION['current_user'] = $data["FullName"];
+              $_SESSION['current_user_address'] = $data["Address"];
+              $_SESSION['current_user_contactNumber'] = $data["ContactNumber"];
+              $_SESSION['current_user_emailAddress'] = $data["EmailAddress"];
               $_SESSION['current_userType'] = $data["UserType"];
 
               if($data["UserType"] === "customer") {

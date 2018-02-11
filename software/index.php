@@ -4,6 +4,10 @@
   // ==========
 include 'dbconnection.php';
 session_start();
+
+if($_SESSION['current_userType'] === "admin") {
+  header("location: adminPanel.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +33,6 @@ session_start();
     <nav class="navbar navbar-light bg-light static-top">
       <div class="container">
         <a class="navbar-brand" href="http://localhost/gyroislandescape/index.html?#">Gyro Island Escape</a>
-        <a href="software/login.php"></a>
         <?php 
           if(isset($_SESSION['isLoggedin'])) {  ?>
           <a><?php echo $_SESSION['current_user'] ?></a>
@@ -39,13 +42,142 @@ session_start();
     <br />
     <br />
     <div class="container">
-      
+      <div class="row">
+        <div class="col-md-8">
+          <h3><?php echo $_SESSION['current_user'] ?></h3>
+          <span><i class="fa fa-globe fa-fw"></i> &nbsp; <?php echo $_SESSION['current_user_address'] ?></span><br />
+          <span><i class="fa fa-phone fa-fw"></i> &nbsp; <?php echo $_SESSION['current_user_contactNumber'] ?></span><br />
+          <span><i class="fa fa-envelope fa-fw"></i> &nbsp; <?php echo $_SESSION['current_user_emailAddress'] ?></span>
+        </div>
+        <div class="col-md-4" align="right">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#book">
+            <i class="fa fa-book fa-fw"></i> Book
+          </button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#notification">
+            <i class="fa fa-globe fa-fw"></i> View Notifications 
+          </button>
+        </div>
+      </div>
+      <br />
+      <table class="table table-bordered" style="width: 100%;">
+        <thead>
+          <tr>
+            <th style="width: 15%;">Book Date</th>
+            <th style="width: 15%;">Book No.</th>
+            <th style="width: 35%;">Remarks</th>
+            <th style="width: 10%;" class="text-center">A</th>
+            <th style="width: 10%;" class="text-center">C</th>
+            <th style="width: 10%;" class="text-center">R</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php 
+            $sql = "SELECT Id, 
+                      BookDate, 
+                      BookNumber, 
+                      ManualBookNumber,
+                      Remarks,
+                      IsApproved,
+                      IsCancelled,
+                      IsReserved
+                    FROM  transactionbook
+                    WHERE BookedByUserId = " . $_SESSION['current_userId'];
+
+            $result = $conn->query($sql);
+            if ($result->num_rows > 0) {
+              while($row = $result->fetch_assoc()) {
+                $bookDataTime = strtotime($row["BookDate"]);
+                $bookDateFormat = date('Y-m-d', $bookDataTime);
+
+                $IsApproved = "No";
+                if($row["IsApproved"] == 1) {
+                  $IsApproved = "Yes";
+                }
+
+                $IsCancelled = "No";
+                if($row["IsCancelled"] == 1) {
+                  $IsCancelled = "Yes";
+                }
+
+                $IsReserved = "No";
+                if($row["IsReserved"] == 1) {
+                  $IsReserved = "Yes";
+                }
+
+                echo 
+                "
+                   <tr>
+                    <td>" . $bookDateFormat . "</td>
+                    <td>" . $row["BookNumber"]. "</td>
+                    <td>" . $row["Remarks"]. "</td>
+                    <td class='text-center'>" . $IsApproved . "</td>
+                    <td class='text-center'>" . $IsCancelled . "</td>
+                    <td class='text-center'>" . $IsReserved . "</td>
+                  </tr>
+                ";
+              }
+            } 
+            $conn->close();
+          ?>
+        </tbody>
+      </table>
     </div>
    <br />
    <br />
    <br />
    <br />
    <br />
+
+   <!-- The Modal -->
+  <div class="modal fade" id="book">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"><i class="fa fa-book fa-fw"></i> Book</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+   <!-- The Modal -->
+  <div class="modal fade" id="notification">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title"><i class="fa fa-globe fa-fw"></i> Notifications</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
    <!-- Footer -->
    <footer class="footer bg-light">
     <div class="container">

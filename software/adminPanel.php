@@ -4,6 +4,10 @@
   // ==========
 include 'dbconnection.php';
 session_start();
+
+if($_SESSION['current_userType'] === "customer") {
+  header("location: index.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,10 +43,76 @@ session_start();
     <br />
     <br />
     <div class="container">
-      
-      
+      <h3><?php echo $_SESSION['current_user'] ?></h3>
+      <br />
+      <table class="table table-bordered" style="width: 100%;">
+        <thead>
+          <tr>
+            <th style="width: 5%;">View</th>
+            <th style="width: 15%;">Book Date</th>
+            <th style="width: 15%;">Book No.</th>
+            <th style="width: 30%;">Customer</th>
+            <th style="width: 25%;">Remarks</th>
+            <th style="width: 10%;" class="text-center">Appove</th>
+            <th style="width: 10%;" class="text-center">Cancel</th>
+            <th style="width: 10%;" class="text-center">Reserve</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php 
+            $sql = "SELECT 
+                      transactionbook.Id, 
+                      transactionbook.BookDate, 
+                      transactionbook.BookNumber, 
+                      transactionbook.ManualBookNumber,
+                      transactionbook.Remarks,
+                      transactionbook.IsApproved,
+                      transactionbook.IsCancelled,
+                      transactionbook.IsReserved,
+                      masteruser.FullName
+                    FROM  transactionbook
+                    INNER JOIN masteruser ON transactionbook.BookedByUserId = masteruser.Id";
+            $result = $conn->query($sql);
 
-      
+            if ($result->num_rows > 0) {
+              while($row = $result->fetch_assoc()) {
+                $bookDataTime = strtotime($row["BookDate"]);
+                $bookDateFormat = date('Y-m-d', $bookDataTime);
+
+                $IsApproved = "<button class='btn btn-primary btn-sm btn-block'><i class='fa fa-check fa-fw'></i> Approve</button>";
+                if($row["IsApproved"] == 1) {
+                  $IsApproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
+                }
+
+                $IsCancelled = "<button class='btn btn-danger btn-sm  btn-block'><i class='fa fa-close fa-fw'></i> Cancel</button>";
+                if($row["IsCancelled"] == 1) {
+                  $IsCancelled = "<i class='fa fa-close fa-fw' style='color: red;'></i>";
+                }
+
+                $IsReserved = "<button class='btn btn-success btn-sm  btn-block'><i class='fa fa-user fa-fw'></i> Reserve</button>";
+                if($row["IsReserved"] == 1) {
+                  $IsReserved = "<i class='fa fa-user fa-fw' style='color: blue;'></i>";
+                }
+
+                echo 
+                "
+                   <tr>
+                    <td><button class='btn btn-info btn-block btn-sm'><i class='fa fa-eye fa-fw'></i></button></td>
+                    <td>" . $bookDateFormat . "</td>
+                    <td>" . $row["BookNumber"]. "</td>
+                    <td>" . $row["FullName"]. "</td>
+                    <td>" . $row["Remarks"]. "</td>
+                    <td class='text-center'>" . $IsApproved . "</td>
+                    <td class='text-center'>" . $IsCancelled . "</td>
+                    <td class='text-center'>" . $IsReserved . "</td>
+                  </tr>
+                ";
+              }
+            } 
+            $conn->close();
+          ?>
+        </tbody>
+      </table>
     </div>
    <br />
    <br />
