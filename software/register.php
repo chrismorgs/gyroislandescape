@@ -36,7 +36,7 @@ include 'dbconnection.php';
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
       <div class="text-center">
-        <h2>Register</h2>
+        <h2>Sign up</h2>
       </div>
       <br />
       <form action="" method="POST">

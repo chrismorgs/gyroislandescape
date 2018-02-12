@@ -94,6 +94,7 @@
           <h4 class="modal-title">Modal Header</h4>
         </div>
         <div class="modal-body">
+          
 
 
 
@@ -126,22 +127,6 @@
 
 </div>
 </div>
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   

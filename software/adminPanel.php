@@ -36,7 +36,7 @@ if($_SESSION['current_userType'] === "customer") {
         <a href="software/login.php"></a>
         <?php 
           if(isset($_SESSION['isLoggedin'])) {  ?>
-          <a><?php echo $_SESSION['current_user'] ?></a>
+          <br/><a><?php echo $_SESSION['current_user'] ?></a>
         <?php } ?>
       </div>
     </nav>

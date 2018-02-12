@@ -17,9 +17,9 @@
 <div class="container">
   <div class="jumbotron">
     <h2><b>What is Gyrocopter?</b></h2  >      
-    <p>The most unique, exhilarating and unforgettable flying, fly the difference and enjoy the freedom in the air..</p>
+   
+  <p>Autogyro <p>The most unique, exhilarating and unforgettable flying, fly the difference and enjoy the freedom in the air..</p>
   </div>
-  <p>Autogyro
 From Wikipedia, the free encyclopedia
 Autogyro
 ELA cougar.jpg
