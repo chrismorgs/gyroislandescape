@@ -5,8 +5,12 @@
 include 'dbconnection.php';
 session_start();
 
-if($_SESSION['current_userType'] === "customer") {
-  header("location: index.php");
+if(isset($_SESSION['current_userId']) && !empty($_SESSION['current_userId'])) {
+  if($_SESSION['current_userType'] === "customer") {
+    header("location: customer_index.php");
+  }
+} else {
+    header("location: login.php");
 }
 ?>
 <!DOCTYPE html>
@@ -34,11 +38,16 @@ if($_SESSION['current_userType'] === "customer") {
       <div class="container">
         <a class="navbar-brand" href="http://localhost/gyroislandescape/index.html?#">Gyro Island Escape</a>
         <a href="software/login.php"></a>
+
+
         <?php 
           if(isset($_SESSION['isLoggedin'])) {  ?>
           <br/><a><?php echo $_SESSION['current_user'] ?></a>
         <?php } ?>
-      </div>
+      </div> 
+      <a type="button" class="btn btn-danger" href="logout.php" >
+            <i class="fa fa-power-off fa-fw"></i>Log out 
+          </a>
     </nav>
     <br />
     <br />
@@ -48,14 +57,14 @@ if($_SESSION['current_userType'] === "customer") {
       <table class="table table-bordered" style="width: 100%;">
         <thead>
           <tr>
-            <th style="width: 5%;">View</th>
-            <th style="width: 15%;">Book Date</th>
-            <th style="width: 15%;">Book No.</th>
-            <th style="width: 30%;">Customer</th>
-            <th style="width: 25%;">Remarks</th>
+            <th style="width: 8%;">View</th>
+            <th style="width: 17%;">Date</th>
+            <th style="width: 25%;">Time</th>
+            <th style="width: 15%;">Book Code.</th>
+            <th style="width: 25%;">Customer</th>
+            <th style="width: 25%;">Pax</th>
             <th style="width: 10%;" class="text-center">Appove</th>
-            <th style="width: 10%;" class="text-center">Cancel</th>
-            <th style="width: 10%;" class="text-center">Reserve</th>
+            <th style="width: 10%;" class="text-center">Disapproved</th>
           </tr>
         </thead>
         <tbody>
@@ -63,12 +72,13 @@ if($_SESSION['current_userType'] === "customer") {
             $sql = "SELECT 
                       transactionbook.Id, 
                       transactionbook.BookDate, 
+                      transactionbook.BookTime, 
                       transactionbook.BookNumber, 
-                      transactionbook.ManualBookNumber,
-                      transactionbook.Remarks,
+                      transactionbook.Note,
                       transactionbook.IsApproved,
-                      transactionbook.IsCancelled,
-                      transactionbook.IsReserved,
+                      transactionbook.Disapproved,
+                      
+                      transactionbook.BookedByUserId,
                       masteruser.FullName
                     FROM  transactionbook
                     INNER JOIN masteruser ON transactionbook.BookedByUserId = masteruser.Id";
@@ -79,32 +89,32 @@ if($_SESSION['current_userType'] === "customer") {
                 $bookDataTime = strtotime($row["BookDate"]);
                 $bookDateFormat = date('Y-m-d', $bookDataTime);
 
-                $IsApproved = "<button class='btn btn-primary btn-sm btn-block'><i class='fa fa-check fa-fw'></i> Approve</button>";
+                $bookTime = strtotime($row["BookTime"]);
+                $bookTimeFormat = date('g:i: A', $bookTime);
+
+                $IsApproved = "<i class='fa fa-close fa-fw' style='color: gray;'></i>";
                 if($row["IsApproved"] == 1) {
                   $IsApproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
                 }
 
-                $IsCancelled = "<button class='btn btn-danger btn-sm  btn-block'><i class='fa fa-close fa-fw'></i> Cancel</button>";
-                if($row["IsCancelled"] == 1) {
-                  $IsCancelled = "<i class='fa fa-close fa-fw' style='color: red;'></i>";
+                $Disapproved = "<i class='fa fa-close fa-fw' style='color: gray;'></i>";
+                if($row["Disapproved"] == 1) {
+                  $Disapproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
                 }
 
-                $IsReserved = "<button class='btn btn-success btn-sm  btn-block'><i class='fa fa-user fa-fw'></i> Reserve</button>";
-                if($row["IsReserved"] == 1) {
-                  $IsReserved = "<i class='fa fa-user fa-fw' style='color: blue;'></i>";
-                }
-
+               
                 echo 
                 "
                    <tr>
-                    <td><button class='btn btn-info btn-block btn-sm'><i class='fa fa-eye fa-fw'></i></button></td>
+                    <td><a class='btn btn-info btn-block btn-sm' href='book_detail.php?book_id=" . $row["Id"] . "'><i class='fa fa-eye fa-fw'></i></a></td>
                     <td>" . $bookDateFormat . "</td>
+                    <td>" . $bookTimeFormat . "</td>
                     <td>" . $row["BookNumber"]. "</td>
                     <td>" . $row["FullName"]. "</td>
-                    <td>" . $row["Remarks"]. "</td>
+                    <td>" . $row["Note"]. "</td>
                     <td class='text-center'>" . $IsApproved . "</td>
-                    <td class='text-center'>" . $IsCancelled . "</td>
-                    <td class='text-center'>" . $IsReserved . "</td>
+                    <td class='text-center'>" . $Disapproved . "</td>
+                    
                   </tr>
                 ";
               }

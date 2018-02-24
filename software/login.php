@@ -17,7 +17,7 @@ session_start();
     <!-- Title -->
     <title>Login</title>
 
-    <!-- Styles -->
+    <!-- Styles --> 
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
@@ -59,6 +59,7 @@ session_start();
           if($_SERVER["REQUEST_METHOD"] == "POST") {
             $myusername = mysqli_real_escape_string($conn, $_POST['username']);
             $mypassword = mysqli_real_escape_string($conn, $_POST['password']); 
+            
 
             $sql = "SELECT Id, 
                       UserName, 
@@ -69,11 +70,11 @@ session_start();
                       UserType 
                     FROM masteruser 
                     WHERE Username = '$myusername' and Password = '$mypassword'";
-                    
-            $result = mysqli_query($conn, $sql);
 
+              
+            $result = mysqli_query($conn, $sql);
             $count = mysqli_num_rows($result);
-            if($count == 1) {
+            if($count == 1) { 
               $data = mysqli_fetch_assoc($result);
 
               $_SESSION['isLoggedin'] = true;
@@ -85,9 +86,9 @@ session_start();
               $_SESSION['current_userType'] = $data["UserType"];
 
               if($data["UserType"] === "customer") {
-                header("location: index.php");
+                header("location: customer_index.php");
               } else if($data["UserType"] === "admin") {
-                header("location: adminPanel.php");
+                header("location: admin_index.php");
               }
            } else {
              $error = "Your Login Name or Password is invalid";
@@ -101,7 +102,7 @@ session_start();
          }
        ?>
        <br />
-       <a href="register.php">Not yet a Member? Click here to Register</a>
+       <a href="register.php">Not yet a Member? Click here to Register</a>  
      </div>
      <div class="col-sm-4"></div>
    </div>

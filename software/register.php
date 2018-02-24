@@ -35,6 +35,95 @@ include 'dbconnection.php';
   <div class="row">
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
+  <?php 
+          if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
+            $address = mysqli_real_escape_string($conn, $_POST['address']); 
+            $contactNumber = mysqli_real_escape_string($conn, $_POST['contactNumber']); 
+            $emailAddress = mysqli_real_escape_string($conn, $_POST['emailAddress']); 
+            $username = mysqli_real_escape_string($conn, $_POST['username']); 
+            $password = mysqli_real_escape_string($conn, $_POST['password']); 
+            $confirmPassword = mysqli_real_escape_string($conn, $_POST['confirmPassword']); 
+
+            if(!isset($fullname) || trim($fullname) == '')
+            {
+               echo
+                 "
+                   <div class='alert alert-danger'>
+                      Full name is required.
+                   </div>
+                 ";
+            } else if(!isset($address) || trim($address) == '') {
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                      Address is required.
+                   </div>
+                 ";
+            } else if(!isset($contactNumber) || trim($contactNumber) == '') {
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                      Contact number is required.
+                   </div>
+                 ";
+
+                 } else if(!isset($emailAddress) || trim($emailAddress) == '') {
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                      Email Address is required.
+                   </div>
+                 ";
+
+                  } else if(!isset($username) || trim($username) == '') {
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                      Username is required.
+                   </div>
+                 ";
+
+                  } else if(!isset($password) || trim($password) == '') {
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                      Password is required.
+                   </div>
+                 ";
+
+                 } else if(!isset($confirmPassword) || trim($confirmPassword) == '') {
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                      Enter Confirm Password.
+                   </div>
+                 ";
+                } else {
+                  
+            $sql = "INSERT INTO masteruser (FullName, Address, ContactNumber, EmailAddress, UserName, Password, UserType, IsActive)
+                    VALUES ('$fullname', '$address','$contactNumber','$emailAddress','$username','$password', 'customer', 'true');";
+
+            if ($conn->query($sql) === TRUE) {
+              $success = "Successfully Registered!";
+              echo
+                 "
+                   <div class='alert alert-success'>
+                   " . $success . "
+                   </div>
+                 ";
+            } else {
+              $error = "Something's went wrong.";
+              echo
+                 "
+                   <div class='alert alert-danger'>
+                   " . $error . "
+                   </div>
+                 ";
+            }
+          }
+          }
+       ?>
       <div class="text-center">
         <h2>Sign up</h2>
       </div>
@@ -72,38 +161,7 @@ include 'dbconnection.php';
           <input type="submit" name="" class="btn btn-success" value="Register"> 
       </form>
       <br />
-      <?php 
-          if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $fullname = mysqli_real_escape_string($conn, $_POST['fullname']);
-            $address = mysqli_real_escape_string($conn, $_POST['address']); 
-            $contactNumber = mysqli_real_escape_string($conn, $_POST['contactNumber']); 
-            $emailAddress = mysqli_real_escape_string($conn, $_POST['emailAddress']); 
-            $username = mysqli_real_escape_string($conn, $_POST['username']); 
-            $password = mysqli_real_escape_string($conn, $_POST['password']); 
-            $confirmPassword = mysqli_real_escape_string($conn, $_POST['confirmPassword']); 
 
-            $sql = "INSERT INTO masteruser (FullName, Address, ContactNumber, EmailAddress, UserName, Password, UserType, IsActive)
-                    VALUES ('$fullname', '$address','$contactNumber','$emailAddress','$username','$password', 'customer', 'true');";
-
-            if ($conn->query($sql) === TRUE) {
-              $success = "Successfully Registered!";
-              echo
-                 "
-                   <div class='alert alert-success'>
-                   " . $success . "
-                   </div>
-                 ";
-            } else {
-              $error = "Something's went wrong.";
-              echo
-                 "
-                   <div class='alert alert-danger'>
-                   " . $error . "
-                   </div>
-                 ";
-            }
-          }
-       ?>
       <br />
       <a href="login.php">Already a Member?</a>
     </div>
