@@ -15,7 +15,7 @@ $content = "No Content";
 if($approve_data == 1) {
 	$content = "Your book has been approved";
 } else if($disapproved_data == 1) {
-	$content = "Your book has been Disapproved";
+	$content = "Your book is pending";
 } else if($reserve_data == 0) {
 	$content = "Your book has been reserved";
 } else {

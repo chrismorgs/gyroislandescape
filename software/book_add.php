@@ -58,9 +58,12 @@ session_start();
         if($_SERVER["REQUEST_METHOD"] == "POST") {
           $current_userId = $_SESSION['current_userId'];
 
+          date_default_timezone_set('GMT');
+          
           $book_date = mysqli_real_escape_string($conn, $_POST['book_date']);
           $book_time = mysqli_real_escape_string($conn, $_POST['book_time']);
           $book_time_value = date('H:i:s ', strtotime($book_time));
+          $book_end_time = date('H:i:s',strtotime($book_time_value . ' +15 minutes'));
           $book_note = mysqli_real_escape_string($conn, $_POST['book_note']); 
           $booknum = mysqli_real_escape_string($conn, $_POST['booknum']); 
 
@@ -69,7 +72,7 @@ session_start();
              echo
                "
                  <div class='alert alert-danger'>
-                    Full name is required.  
+                    Book date is required.  
                  </div>
                ";
           } else if(!isset($book_time) || trim($book_time) == '') {
@@ -84,38 +87,57 @@ session_start();
                "
                  <div class='alert alert-danger'>
                     Number of pax is required.
+                    ".$book_time_value."
                  </div>
                ";
           } else {
 
-          $bookSql = "INSERT INTO `transactionbook`  (
-            BookDate, 
-            BookNumber, 
-            Note, 
-            IsApproved, 
-            Disapproved, 
-            BookedByUserId,
-            BookTime)
-          VALUES (
-            '$book_date', 
-            '$booknum',
-            '$book_note',
-            '0',
-            '0',
-            '$current_userId',
-            '$book_time_value')";
+          $currentSQL = "SELECT * FROM 
+                         transactionbook
+                         WHERE BookTime < '$book_end_time' AND BookEndTime > '$book_time_value'";
 
-          if ($conn->query($bookSql) == TRUE) {
-                header("location: customer_index.php");
-          } else {
-            $error = "Something's went wrong.";
+
+          $currentSQLResult = $conn->query($currentSQL);
+          if ($currentSQLResult->num_rows > 0) {
             echo
             "
-            <div class='alert alert-danger'>
-            " . $error . "
-            </div>
+              <div class='alert alert-danger'>
+                Sorry. You can not book by this time.
+              </div>
             ";
+          } else {
+            $bookSql = "INSERT INTO `transactionbook`  (
+              BookDate, 
+              BookNumber, 
+              Note, 
+              IsApproved, 
+              Disapproved, 
+              BookedByUserId,
+              BookTime,
+              BookEndTime)
+            VALUES (
+              '$book_date', 
+              '$booknum',
+              '$book_note',
+              '0',
+              '0',
+              '$current_userId',
+              '$book_time_value',
+              '$book_end_time')";
+
+            if ($conn->query($bookSql) == TRUE) {
+                  header("location: customer_index.php");
+            } else {
+              $error = "Something's went wrong.";
+              echo
+              "
+              <div class='alert alert-danger'>
+              " . $error . "
+              </div>
+              ";
+            }
           }
+
         }
         }
         ?>

@@ -13,14 +13,14 @@
       header("location: login.php");
   }
 
-  ?>
+  ?>  
   <!DOCTYPE html>
   <html lang="en">
   <head>
     <!-- Meta Datas -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+    <meta name="description" content ="">
     <meta name="author" content="">
 
     <!-- Title -->
@@ -73,14 +73,13 @@
       <table class="table table-bordered" style="width: 100%;">
         <thead>
           <tr>
-            <th style="width: 7%;">Edit</th>
-            <th style="width: 7%;">Delete</th>
+            <th style="width: 10%;" class="text-center">Actions</th>
             <th style="width: 10%;">Book Date</th>
             <th style="width: 10%;">Book Time</th>
             <th style="width: 13%;">Book Code</th>
             <th style="width: 10%;">Pax</th>
-            <th style="width: 9%;" class="text-center">Approve</th>
-            <th style="width: 9%;" class="text-center">Disapproved</th>
+            <th style="width: 5%;" class="text-center">Approve</th>
+            <th style="width: 5%;" class="text-center">Pending</th>
             
           </tr>
         </thead>
@@ -100,14 +99,14 @@
               $bookTime = strtotime($row["BookTime"]);
               $bookTimeFormat = date('g:i: A', $bookTime);
 
-              $IsApproved = "No";
+              $IsApproved = " ";
               if($row["IsApproved"] == 1) {
-                $IsApproved = "Yes";
+              $IsApproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
               }
 
-              $Disapproved = "No";
+              $Disapproved = " ";
               if($row["Disapproved"] == 1) {
-                $Disapproved = "Yes";
+                $Disapproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
               }
 
               
@@ -116,10 +115,8 @@
               "
               <tr>
               <td>
-                <a href='book_edit.php?book_id=". $row["Id"] ."' class='btn btn-primary btn-block btn-sm'>Edit</a>
-              </td>
-              <td>
-                <button onclick= 'remove(  ".$row["Id"].")' class='btn btn-danger btn-block btn-sm' > Delete</button>
+                <a href='book_edit.php?book_id=". $row["Id"] ."' class='btn btn-primary btn-sm'>Update</a>
+                <button onclick= 'remove(  ".$row["Id"].")' class='btn btn-danger btn-sm'>Cancel</button>
               </td>
               <td>" . $bookDateFormat . "</td>
               <td>" . $bookTimeFormat . "</td>

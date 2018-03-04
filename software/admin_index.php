@@ -39,7 +39,6 @@ if(isset($_SESSION['current_userId']) && !empty($_SESSION['current_userId'])) {
         <a class="navbar-brand" href="http://localhost/gyroislandescape/index.html?#">Gyro Island Escape</a>
         <a href="software/login.php"></a>
 
-
         <?php 
           if(isset($_SESSION['isLoggedin'])) {  ?>
           <br/><a><?php echo $_SESSION['current_user'] ?></a>
@@ -64,7 +63,7 @@ if(isset($_SESSION['current_userId']) && !empty($_SESSION['current_userId'])) {
             <th style="width: 25%;">Customer</th>
             <th style="width: 25%;">Pax</th>
             <th style="width: 10%;" class="text-center">Appove</th>
-            <th style="width: 10%;" class="text-center">Disapproved</th>
+            <th style="width: 10%;" class="text-center">Pending</th>
           </tr>
         </thead>
         <tbody>
@@ -92,16 +91,15 @@ if(isset($_SESSION['current_userId']) && !empty($_SESSION['current_userId'])) {
                 $bookTime = strtotime($row["BookTime"]);
                 $bookTimeFormat = date('g:i: A', $bookTime);
 
-                $IsApproved = "<i class='fa fa-close fa-fw' style='color: gray;'></i>";
+                $IsApproved = " ";
                 if($row["IsApproved"] == 1) {
                   $IsApproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
                 }
 
-                $Disapproved = "<i class='fa fa-close fa-fw' style='color: gray;'></i>";
+                $Disapproved = " ";
                 if($row["Disapproved"] == 1) {
                   $Disapproved = "<i class='fa fa-check fa-fw' style='color: green;'></i>";
                 }
-
                
                 echo 
                 "

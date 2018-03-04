@@ -81,7 +81,7 @@ session_start();
         }
         ?>
         <h2>
-          Edit Book
+          Update Book
         </h2>
         <div class="jumbotron">
           <form action='' method="POST">

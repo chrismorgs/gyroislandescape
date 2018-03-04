@@ -191,7 +191,7 @@ if(isset($_SESSION['current_userId']) && !empty($_SESSION['current_userId'])) {
       <br />
       <br />
       <button type="button" class="btn btn-primary" onclick="bookDetailFunction(<?php echo $BookedByUserId ?>, <?php echo $_GET['book_id'] ?>, 1, 0, 0)">Approve</button>
-      <button type="button" class="btn btn-danger" onclick="bookDetailFunction(<?php echo $BookedByUserId ?>, <?php echo $_GET['book_id'] ?>, 0, 1, 0)">Disapproved</button>
+      <button type="button" class="btn btn-danger" onclick="bookDetailFunction(<?php echo $BookedByUserId ?>, <?php echo $_GET['book_id'] ?>, 0, 1, 0)">Pending</button>
       
       <a type="button" class="btn btn-danger pull-right" href="admin_index.php">Close</a>
       <?php }?>
@@ -270,7 +270,7 @@ if(isset($_SESSION['current_userId']) && !empty($_SESSION['current_userId'])) {
         }
 
         if(disapproved == 1) {
-          var r = confirm("Are you sure you want to disapproved?");
+          var r = confirm("Are you sure you want the book to be pending?");
           if (r == true) {
               window.location="book_detail_function.php?bookByUserId="+bookByUserId+"&book_id="+id+"&approve_data="+approve+"&disapproved_data="+disapproved
           }
